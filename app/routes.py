@@ -4,7 +4,7 @@ import numpy as np
 
 
 def register_routes(app, client, handbook_info, models):
-    @app.route("/query", methods=["POST"])
+    @app.route("/api/query", methods=["POST"])
     def query():
         data = request.get_json()
         query_text = data.get("query", "")
