@@ -42,14 +42,10 @@ def register_routes(app, client, handbook_info, models):
 
         """
 
-        print(prompt)
-
-        print("------")
-
         completion = client.chat.completions.create(
             model="gpt-4o",
             messages=[
-                {"role": "developer", "content": "You are a helpful assistant. Jawab sesuai informasi yang diberikan Jangan menjawab dari informasi internal model"},
+                {"role": "developer", "content": "You are a helpful assistant. Jawab berdasarkan informasi yang diberikan namun tidak terbatas pada perbedaan bahasa yang ada dari pertanyaan Jangan menjawab dari informasi internal model"},
                 {
                     "role": "user",
                     "content": prompt
