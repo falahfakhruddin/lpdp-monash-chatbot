@@ -4,6 +4,6 @@
     { "src": "run.py", "use": "@vercel/python" }
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "wsgi.py" }
+    { "src": "/api/(.*)", "dest": "run.py" }
   ]
 }
