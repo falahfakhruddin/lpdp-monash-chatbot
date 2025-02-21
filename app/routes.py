@@ -20,15 +20,10 @@ def register_routes(app, client, handbook_info, models):
         embedding_array = np.array(models)
         q_embedding = response.data[0].embedding
         q_embedding_array = np.array(q_embedding)
-        similarity = 1 - np.dot(embedding_array, q_embedding_array)
+        dot_product = np.dot(embedding_array, q_embedding_array)
+        similarity = dot_product / (np.linalg.norm(embedding_array) * np.linalg.norm(q_embedding_array))
 
-        # Define threshold
-        threshold = 0.45
-
-        # Get indices where values are above the threshold
-        indices = np.where(similarity < threshold)[0]
-        if indices.shape[0] > 10:
-            indices = np.argsort(similarity)[:12]
+        indices = np.argsort(similarity)[-10:][::-1]
 
         # Convert to list if needed
         index_list = indices.tolist()
@@ -36,20 +31,16 @@ def register_routes(app, client, handbook_info, models):
 
         prompt = f"""
         Jawab pertanyaan berikut: {query_text}
-        berdasarkan informasi yang diberikan kepada anda sebelumnya.
+        berdasarkan informasi berikut:
+        {information}
 
         Hanya Jawab berdasarkan informasi yang diberikan. Jika informasi yang ada tidak cukup untuk menjawab pertanyaan jawab anda tidak bisa menjawabnya.
-        """
-
-        initial_prompt = f"""
-        Anda adalah asisten yang sangat taat, anda diberikan informasi yang terbatas pada:
-        {information}
         """
 
         completion = client.chat.completions.create(
             model="gpt-4o",
             messages=[
-                {"role": "developer", "content": initial_prompt},
+                {"role": "developer", "content": "Anda adalah asisten taat yang menjawab pernyataan terbatas pada informasi yang diberikan"},
                 {
                     "role": "user",
                     "content": prompt
